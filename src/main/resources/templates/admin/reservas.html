@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabecera('Reservas del día')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: menu}"></header>
+<main class="contenedor">
+    <h1>Reservas del día</h1>
+    <div th:replace="~{fragments/layout :: avisos}"></div>
+    <form class="panel rejilla" th:action="@{/admin/reservas}" method="get">
+        <label>Fecha
+            <input type="date" name="fecha" th:value="${fecha}" required>
+        </label>
+        <button type="submit" class="boton">Ver día</button>
+    </form>
+
+    <p class="aviso" th:if="${#lists.isEmpty(reservas)}">No hay reservas para este día.</p>
+    <table class="tabla" th:unless="${#lists.isEmpty(reservas)}">
+        <thead>
+        <tr><th>Hora</th><th>Mesa</th><th>Cliente</th><th>Contacto</th><th>Personas</th><th>Estado</th><th></th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${reservas}">
+            <td data-etiqueta="Hora" th:text="${#temporals.format(r.hora, 'HH:mm')}"></td>
+            <td data-etiqueta="Mesa" th:text="${r.mesa.numero}"></td>
+            <td data-etiqueta="Cliente" th:text="${r.cliente.nombre}"></td>
+            <td data-etiqueta="Contacto" th:text="${r.cliente.telefono} + ' · ' + ${r.cliente.email}"></td>
+            <td data-etiqueta="Personas" th:text="${r.personas}"></td>
+            <td data-etiqueta="Estado"><span class="etiqueta" th:classappend="${r.activa} ? 'activa' : 'cancelada'" th:text="${r.estado.etiqueta}"></span></td>
+            <td>
+                <form th:if="${r.activa}" th:action="@{/admin/reservas/{c}/cancelar(c=${r.codigo})}" method="post" class="en-linea"
+                      onsubmit="return confirm('¿Cancelar esta reserva?');">
+                    <input type="hidden" name="fecha" th:value="${fecha}">
+                    <button type="submit" class="boton peligro chico">Cancelar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

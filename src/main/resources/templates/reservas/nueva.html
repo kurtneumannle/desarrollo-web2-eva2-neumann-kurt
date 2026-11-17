@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabecera('Reservar')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: menu}"></header>
+<main class="contenedor">
+    <h1>Reservar una mesa</h1>
+    <div th:replace="~{fragments/layout :: avisos}"></div>
+
+    <!-- Paso 1: consulta de disponibilidad (GET). Al enviarla, el controlador devuelve las mesas libres. -->
+    <form class="panel rejilla" th:action="@{/reservas/nueva}" method="get">
+        <h2>1. ¿Cuándo?</h2>
+        <label>Fecha
+            <input type="date" name="fecha" th:value="${form.fecha}" th:min="${hoy}" required>
+        </label>
+        <label>Hora
+            <select name="hora" required>
+                <option value="">Elige…</option>
+                <option th:each="h : ${horarios}" th:value="${h}" th:text="${h}"
+                        th:selected="${form.hora != null and form.hora == h}"></option>
+            </select>
+        </label>
+        <label>Personas
+            <input type="number" name="personas" min="1" max="12" th:value="${form.personas}" required>
+        </label>
+        <button type="submit" class="boton">Ver mesas disponibles</button>
+    </form>
+
+    <!-- Paso 2: elegir mesa y dejar los datos de contacto (POST). Solo aparece si ya se consulto un horario. -->
+    <form class="panel" th:if="${mesas != null}" th:action="@{/reservas}" th:object="${form}" method="post">
+        <h2>2. Elige tu mesa</h2>
+        <input type="hidden" th:field="*{fecha}">
+        <input type="hidden" th:field="*{hora}">
+        <input type="hidden" th:field="*{personas}">
+
+        <p th:if="${#lists.isEmpty(mesas)}" class="aviso error">
+            No quedan mesas libres para ese horario. Prueba con otra hora u otro día.
+        </p>
+        <div class="mesas" th:unless="${#lists.isEmpty(mesas)}">
+            <label class="mesa" th:each="m : ${mesas}">
+                <input type="radio" th:field="*{mesaId}" th:value="${m.id}">
+                <span>Mesa <strong th:text="${m.numero}"></strong><small th:text="'Para ' + ${m.capacidad} + ' personas'"></small></span>
+            </label>
+        </div>
+        <p class="campo-error" th:if="${#fields.hasErrors('mesaId')}" th:errors="*{mesaId}"></p>
+
+        <h2>3. Tus datos</h2>
+        <div class="rejilla">
+            <label>Nombre
+                <input type="text" th:field="*{nombre}" maxlength="80" required>
+                <span class="campo-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+            </label>
+            <label>Correo
+                <input type="email" th:field="*{email}" maxlength="120" required>
+                <span class="campo-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            </label>
+            <label>Teléfono
+                <input type="tel" th:field="*{telefono}" maxlength="20" required>
+                <span class="campo-error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+            </label>
+        </div>
+        <span class="campo-error" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></span>
+        <span class="campo-error" th:if="${#fields.hasErrors('hora')}" th:errors="*{hora}"></span>
+        <span class="campo-error" th:if="${#fields.hasErrors('personas')}" th:errors="*{personas}"></span>
+        <button type="submit" class="boton" th:disabled="${#lists.isEmpty(mesas)}">Confirmar reserva</button>
+    </form>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

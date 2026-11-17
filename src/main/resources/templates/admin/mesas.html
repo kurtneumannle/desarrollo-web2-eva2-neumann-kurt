@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabecera('Mesas')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: menu}"></header>
+<main class="contenedor">
+    <h1>Configuración de mesas</h1>
+    <div th:replace="~{fragments/layout :: avisos}"></div>
+
+    <form class="panel rejilla" th:action="@{/admin/mesas}" th:object="${form}" method="post">
+        <h2>Agregar mesa</h2>
+        <label>Número
+            <input type="number" th:field="*{numero}" min="1" required>
+            <span class="campo-error" th:if="${#fields.hasErrors('numero')}" th:errors="*{numero}"></span>
+        </label>
+        <label>Capacidad
+            <input type="number" th:field="*{capacidad}" min="1" max="20" required>
+            <span class="campo-error" th:if="${#fields.hasErrors('capacidad')}" th:errors="*{capacidad}"></span>
+        </label>
+        <button type="submit" class="boton">Agregar</button>
+    </form>
+
+    <table class="tabla">
+        <thead><tr><th>Número</th><th>Capacidad</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+        <tr th:each="m : ${mesas}">
+            <!-- Cada fila tiene su propio formulario para editar numero y capacidad -->
+            <td data-etiqueta="Número" colspan="2">
+                <form th:action="@{/admin/mesas/{id}(id=${m.id})}" method="post" class="en-linea editar-mesa">
+                    <input type="number" name="numero" th:value="${m.numero}" min="1" aria-label="Número de mesa" required>
+                    <input type="number" name="capacidad" th:value="${m.capacidad}" min="1" max="20" aria-label="Capacidad" required>
+                    <button type="submit" class="boton secundario chico">Guardar</button>
+                </form>
+            </td>
+            <td data-etiqueta="Estado"><span class="etiqueta" th:classappend="${m.activa} ? 'activa' : 'cancelada'" th:text="${m.activa} ? 'Activa' : 'Inactiva'"></span></td>
+            <td data-etiqueta="Acciones">
+                <form th:action="@{/admin/mesas/{id}/estado(id=${m.id})}" method="post" class="en-linea">
+                    <button type="submit" class="boton secundario chico" th:text="${m.activa} ? 'Desactivar' : 'Activar'"></button>
+                </form>
+                <form th:action="@{/admin/mesas/{id}/eliminar(id=${m.id})}" method="post" class="en-linea"
+                      onsubmit="return confirm('¿Eliminar la mesa?');">
+                    <button type="submit" class="boton peligro chico">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

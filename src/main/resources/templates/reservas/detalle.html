@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabecera('Tu reserva')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: menu}"></header>
+<main class="contenedor">
+    <h1>Tu reserva</h1>
+    <div th:replace="~{fragments/layout :: avisos}"></div>
+    <section class="panel">
+        <p>
+            <span class="etiqueta" th:classappend="${reserva.activa} ? 'activa' : 'cancelada'"
+                  th:text="${reserva.estado.etiqueta}"></span>
+        </p>
+        <dl class="datos">
+            <dt>Nombre</dt><dd th:text="${reserva.cliente.nombre}"></dd>
+            <dt>Correo</dt><dd th:text="${reserva.cliente.email}"></dd>
+            <dt>Fecha</dt><dd th:text="${#temporals.format(reserva.fecha, 'dd-MM-yyyy')}"></dd>
+            <dt>Hora</dt><dd th:text="${#temporals.format(reserva.hora, 'HH:mm')}"></dd>
+            <dt>Personas</dt><dd th:text="${reserva.personas}"></dd>
+            <dt>Mesa</dt><dd th:text="${reserva.mesa.numero} + ' (capacidad ' + ${reserva.mesa.capacidad} + ')'"></dd>
+        </dl>
+        <div class="acciones" th:if="${reserva.activa}">
+            <a class="boton" th:href="@{/reservas/{c}/editar(c=${reserva.codigo})}">Modificar</a>
+            <form th:action="@{/reservas/{c}/cancelar(c=${reserva.codigo})}" method="post" class="en-linea"
+                  onsubmit="return confirm('¿Seguro que quieres cancelar la reserva?');">
+                <button type="submit" class="boton peligro">Cancelar reserva</button>
+            </form>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

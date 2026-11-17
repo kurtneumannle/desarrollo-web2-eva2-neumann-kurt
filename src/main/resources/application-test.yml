@@ -1,0 +1,7 @@
+# Pruebas automaticas: base H2 propia y sin mesas de ejemplo (cada prueba crea las suyas).
+spring:
+  datasource:
+    url: jdbc:h2:mem:reservas-test;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

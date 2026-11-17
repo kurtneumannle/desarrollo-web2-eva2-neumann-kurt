@@ -1,0 +1,10 @@
+# Desarrollo: base H2 en memoria, se crea y se borra con cada arranque.
+spring:
+  datasource:
+    url: jdbc:h2:mem:reservas;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: false

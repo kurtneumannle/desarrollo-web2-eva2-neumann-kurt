@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabecera('No encontrado')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: menu}"></header>
+<main class="contenedor angosto">
+    <h1>No encontramos lo que buscas</h1>
+    <p class="aviso error" th:text="${mensajeError}"></p>
+    <a class="boton" th:href="@{/}">Volver al inicio</a>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

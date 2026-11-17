@@ -1,0 +1,16 @@
+# Configuracion comun. El perfil "dev" (por defecto) usa H2 en memoria; "prod" usa PostgreSQL.
+spring:
+  application:
+    name: sabor-gourmet
+  profiles:
+    default: dev
+  jpa:
+    open-in-view: false
+  thymeleaf:
+    cache: false
+
+# Clave del usuario administrador. En produccion se entrega por variable de entorno ADMIN_PASSWORD.
+app:
+  admin:
+    usuario: admin
+    password: ${ADMIN_PASSWORD:admin-dev}

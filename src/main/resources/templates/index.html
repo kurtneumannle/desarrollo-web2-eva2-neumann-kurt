@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabecera('Inicio')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: menu}"></header>
+<main class="contenedor">
+    <section class="hero">
+        <h1>Reserva tu mesa en Sabor Gourmet</h1>
+        <p>Mira las mesas disponibles en tiempo real, reserva en un minuto y modifica o cancela cuando quieras.</p>
+        <div class="acciones">
+            <a class="boton" th:href="@{/reservas/nueva}">Reservar una mesa</a>
+            <a class="boton secundario" th:href="@{/reservas/mis-reservas}">Ver mis reservas</a>
+        </div>
+    </section>
+    <section class="tarjetas">
+        <article class="tarjeta">
+            <h2>1. Elige el horario</h2>
+            <p>Indica fecha, hora y cuántas personas son. Atendemos todos los días de 12:00 a 21:00.</p>
+        </article>
+        <article class="tarjeta">
+            <h2>2. Escoge tu mesa</h2>
+            <p>Te mostramos solo las mesas libres con capacidad suficiente para tu grupo.</p>
+        </article>
+        <article class="tarjeta">
+            <h2>3. Confirma</h2>
+            <p>Recibes un enlace único para modificar o cancelar tu reserva cuando lo necesites.</p>
+        </article>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

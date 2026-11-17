@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: cabecera('Mis reservas')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: menu}"></header>
+<main class="contenedor">
+    <h1>Mis reservas</h1>
+    <form class="panel rejilla" th:action="@{/reservas/mis-reservas}" method="get">
+        <label>Correo con el que reservaste
+            <input type="email" name="email" th:value="${email}" required>
+        </label>
+        <button type="submit" class="boton">Buscar</button>
+    </form>
+
+    <p class="aviso" th:if="${reservas != null and #lists.isEmpty(reservas)}">No encontramos reservas con ese correo.</p>
+
+    <!-- En pantallas chicas la tabla se vuelve una lista de tarjetas (ver app.css) -->
+    <table class="tabla" th:if="${reservas != null and !#lists.isEmpty(reservas)}">
+        <thead>
+        <tr><th>Fecha</th><th>Hora</th><th>Personas</th><th>Mesa</th><th>Estado</th><th></th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${reservas}">
+            <td data-etiqueta="Fecha" th:text="${#temporals.format(r.fecha, 'dd-MM-yyyy')}"></td>
+            <td data-etiqueta="Hora" th:text="${#temporals.format(r.hora, 'HH:mm')}"></td>
+            <td data-etiqueta="Personas" th:text="${r.personas}"></td>
+            <td data-etiqueta="Mesa" th:text="${r.mesa.numero}"></td>
+            <td data-etiqueta="Estado"><span class="etiqueta" th:classappend="${r.activa} ? 'activa' : 'cancelada'" th:text="${r.estado.etiqueta}"></span></td>
+            <td><a th:href="@{/reservas/{c}(c=${r.codigo})}">Ver</a></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

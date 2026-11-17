@@ -1,0 +1,11 @@
+# Produccion: PostgreSQL con credenciales por variables de entorno (nunca en el repositorio).
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  thymeleaf:
+    cache: true

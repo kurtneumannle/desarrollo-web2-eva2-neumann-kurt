@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+  Fragmentos compartidos por todas las vistas: cabecera HTML, menu de navegacion y mensajes.
+  Cada pagina los incluye con th:replace, asi el diseno y el menu se mantienen en un solo lugar.
+-->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="cabecera(titulo)">
+    <meta charset="UTF-8">
+    <!-- viewport: hace que la pagina se adapte al ancho del celular (diseño responsivo) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' · Sabor Gourmet'">Sabor Gourmet</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header class="sitio" th:fragment="menu">
+    <div class="contenedor barra">
+        <a class="marca" th:href="@{/}">Sabor <span>Gourmet</span></a>
+        <nav class="menu">
+            <a th:href="@{/reservas/nueva}">Reservar</a>
+            <a th:href="@{/reservas/mis-reservas}">Mis reservas</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/reservas}">Reservas del día</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/mesas}">Mesas</a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Personal</a>
+            <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="en-linea">
+                <button type="submit" class="enlace">Salir</button>
+            </form>
+        </nav>
+    </div>
+</header>
+<div th:fragment="avisos" class="contenedor">
+    <p class="aviso ok" role="status" th:if="${mensaje}" th:text="${mensaje}"></p>
+    <p class="aviso error" role="alert" th:if="${error}" th:text="${error}"></p>
+</div>
+<footer class="sitio pie" th:fragment="pie">
+    <div class="contenedor">Sabor Gourmet · Sistema de reservas · Proyecto académico IPSS</div>
+</footer>
+</body>
+</html>
